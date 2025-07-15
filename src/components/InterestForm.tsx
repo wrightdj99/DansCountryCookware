@@ -36,6 +36,16 @@ export default function InterestForm() {
     const formatted = digitsOnly.replace(/(\d{4})(?=\d)/g, "$1-");
     setSecretPin(formatted);
   };
+
+  function formatCurrency(value: string): string {
+    const cleaned = value.replace(/[^\d]/g, ""); // remove non-digits
+    const numeric = parseFloat(cleaned) / 100;   // shift for cents
+    if (isNaN(numeric)) return "";
+    return numeric.toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
+    });
+  }
   
   return (
     <Box sx={{ 
@@ -50,7 +60,7 @@ export default function InterestForm() {
         backgroundColor: "#479dafe6",
       }}>
         <CardContent>
-          <Typography variant="h3" gutterBottom sx={{ color: "#ffffff" }}>
+          <Typography variant="h3" gutterBottom sx={{ color: "#ffffff", fontWeight: 100, fontFamily: "sans-serif" }}>
             Interested In Spidr Design's Air Fryer?
           </Typography>
           <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem"}}>
@@ -100,10 +110,12 @@ export default function InterestForm() {
                 backgroundColor: "white",
               }}
               variant="filled"
+              value={airFryerCost}
               label="Guess the air fryer's cost"
               name="airFryerCost"
               id="airFryerCost"
-              onChange={(e) => setAirFryerCost(e.target.value)}
+              onChange={(e) => setAirFryerCost(formatCurrency(e.target.value))}
+              inputProps={{ inputMode: "numeric" }}
             />
             <TextField
               sx={{ 
@@ -115,7 +127,7 @@ export default function InterestForm() {
               name="superSecretPin"
               id="superSecretPin"
               onChange={(e) => formatSpidrPin(e.target.value)}
-              inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+              inputProps={{ inputMode: "numeric" }}
             />
             
             <div style={{ textAlign: "center" }}>
