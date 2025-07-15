@@ -60,7 +60,7 @@ export default function InterestForm() {
         backgroundColor: "#479dafe6",
       }}>
         <CardContent>
-          <Typography variant="h3" gutterBottom sx={{ color: "#ffffff", fontWeight: 100, fontFamily: "sans-serif" }}>
+          <Typography variant="h3" gutterBottom sx={{ color: "#ffffff", fontWeight: 200, fontFamily: "inherit" }}>
             Interested In Spidr Design's Air Fryer?
           </Typography>
           <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem"}}>
