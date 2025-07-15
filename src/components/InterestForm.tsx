@@ -5,7 +5,8 @@ import { Card,
          Button, 
          Typography,
         TextField } from "@mui/material"
-import IMask from 'imask';
+import InputMask from 'react-input-mask';
+import { MuiTelInput } from "mui-tel-input";
 export default function InterestForm() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -68,15 +69,16 @@ export default function InterestForm() {
               id="lastName"
               onChange={(e) => setLastName(e.target.value)}
             />
-            <TextField
+            <MuiTelInput
               sx={{ 
-                backgroundColor: "white",
+                backgroundColor: "white"
               }}
               variant="filled"
+              value={phone}
+              onChange={setPhone}
+              defaultCountry="US"
               label="Phone Number"
-              name="phoneNumber"
-              id="PhoneNumber"
-              onChange={(e) => setPhone(e.target.value)}
+              fullWidth
             />
             <TextField
               sx={{ 
