@@ -5,7 +5,6 @@ import { Card,
          Button, 
          Typography,
         TextField } from "@mui/material"
-import InputMask from 'react-input-mask';
 import { MuiTelInput } from "mui-tel-input";
 export default function InterestForm() {
   const [firstName, setFirstName] = useState("");
@@ -31,6 +30,12 @@ export default function InterestForm() {
 
     e.preventDefault();
   }
+
+  const formatSpidrPin = (value: string) => {
+    const digitsOnly = value.replace(/\D/g, "").slice(0, 16);
+    const formatted = digitsOnly.replace(/(\d{4})(?=\d)/g, "$1-");
+    setSecretPin(formatted);
+  };
   
   return (
     <Box sx={{ 
@@ -105,11 +110,14 @@ export default function InterestForm() {
                 backgroundColor: "white",
               }}
               variant="filled"
+              value={secretPin}
               label="Super Secret PIN #"
               name="superSecretPin"
               id="superSecretPin"
-              onChange={(e) => setSecretPin(e.target.value)}
+              onChange={(e) => formatSpidrPin(e.target.value)}
+              inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
             />
+            
             <div style={{ textAlign: "center" }}>
               <Button type="submit" sx={{ 
                 backgroundColor: "white",
