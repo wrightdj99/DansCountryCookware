@@ -1,10 +1,11 @@
 import { useState } from 'react'
+import InterestForm from './components/InterestForm'
 
 function App() {
 
   return (
     <>
-      <h1>Test123</h1>
+      <InterestForm/>
     </>
   )
 }
