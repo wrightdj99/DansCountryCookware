@@ -166,7 +166,7 @@ export default function InterestForm() {
               onChange={handleEmailChange}
               onBlur={handleEmailBlur}
               error={!!emailError && emailBlurred}
-              helperText={emailBlurred && emailError ? emailError : " "}
+              helperText={emailBlurred && emailError ? emailError : ""}
             />
             
             <Typography variant="h6"sx={{
