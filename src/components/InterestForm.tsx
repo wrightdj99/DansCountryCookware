@@ -4,15 +4,27 @@ import { Card,
          CardContent, 
          Button, 
          Typography,
-        TextField } from "@mui/material"
+        TextField, 
+        FormControl,
+        type SelectChangeEvent,
+        FormLabel,
+        RadioGroup,
+        FormControlLabel,
+        Radio} from "@mui/material"
 import { MuiTelInput } from "mui-tel-input";
+import linenBackground from "../assets/linenBackground.avif";
+import { featureOptions } from "../core/mostImportantFeatureOptions";
+import { userBudgetOptions } from "../core/userBudgetOptions";
+
 export default function InterestForm() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
-  const [airFryerCost, setAirFryerCost] = useState("");
-  const [secretPin, setSecretPin] = useState("");
+  const [userBudget, setUserBudget] = useState("");
+  const [mostImporantFeature, setMostImportantFeature] = useState("");
+  const [emailBlurred, setEmailBlurred] = useState(false);
+  const [emailError, setEmailError] = useState("");
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     const formData = {
@@ -20,8 +32,8 @@ export default function InterestForm() {
       lastName: lastName,
       phone: phone,
       emailAddress: emailAddress,
-      airFryerCost: airFryerCost,
-      secretPin: secretPin
+      userBudget,
+      mostImporantFeature
     };
 
     const jsonifiedData = JSON.stringify(formData);
@@ -31,20 +43,28 @@ export default function InterestForm() {
     e.preventDefault();
   }
 
-  const formatSpidrPin = (value: string) => {
-    const digitsOnly = value.replace(/\D/g, "").slice(0, 16);
-    const formatted = digitsOnly.replace(/(\d{4})(?=\d)/g, "$1-");
-    setSecretPin(formatted);
-  };
+  const handleBudgetChange = (e: SelectChangeEvent) => {
+    setUserBudget(e.target.value as string);
+  }
 
-  function formatCurrency(value: string): string {
-    const cleaned = value.replace(/[^\d]/g, ""); // remove non-digits
-    const numeric = parseFloat(cleaned) / 100;   // shift for cents
-    if (isNaN(numeric)) return "";
-    return numeric.toLocaleString("en-US", {
-      style: "currency",
-      currency: "USD",
-    });
+  const handleMostImportantFeatureChange = (e: SelectChangeEvent) => {
+    setMostImportantFeature(e.target.value as string);
+  }
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    console.log(pattern.test(e.target.value as string));
+    setEmailAddress(e.target.value);
+  }
+
+  const handleEmailBlur = () => {
+    setEmailBlurred(true);
+    const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!pattern.test(emailAddress)) {
+      setEmailError("Please enter a valid email address");
+    } else {
+      setEmailError("");
+    }
   }
   
   return (
@@ -53,20 +73,60 @@ export default function InterestForm() {
       height: "100vh",
       display: "flex",
       justifyContent: "center",
+      backgroundImage: `url(${linenBackground})`,
+      backgroundSize: "cover",
+      backgroundRepeat: "repeat",
       alignItems: "center",
+      overflow: "hidden",
+      padding: 4
      }}>
       <Card sx={{
-        minWidth: "75vw",
-        backgroundColor: "#479dafe6",
+        backgroundColor: "#fff7ed",
+        border: "2px solid #a17c5e",
+        borderRadius: "20px",
+        boxShadow: "4px 6px 15px rgba(0, 0, 0, 0.15)",
+        padding: 4,
+        width: "100%",
+        maxWidth: "600px",
+        maxHeight: "90vh",
+        fontFamily: "'Merriweather', serif",
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden"
       }}>
-        <CardContent>
-          <Typography variant="h3" gutterBottom sx={{ color: "#ffffff", fontWeight: 200, fontFamily: "inherit" }}>
-            Interested In Spidr Design's Air Fryer?
+        <CardContent
+          sx={{
+            padding: 4,
+            overflowY: "auto"
+          }}
+        >
+          <Typography variant="h4" gutterBottom sx={{ 
+            color: "#4a2d16", 
+            fontWeight: 700,
+            justifyContent: "center", 
+            fontFamily: "'Playfair Display', serif", 
+            textAlign: "center",
+            whiteSpace: "pre-line",
+            marginBottom: 2 
+          }}>
+            {"Join the\nDan's Country Cookware\nAir Fryer Beta"}
+          </Typography>
+          <Typography variant="h6" gutterBottom sx={{ 
+            fontStyle: "italic", 
+            color: "#4a2d16", 
+            fontWeight: 400, 
+            fontFamily: "'Lora', serif", 
+            textAlign: "center",
+            whiteSpace: "pre-line",
+            marginBottom: 2 
+          }}>
+            {"Built for folks who believe\nevery kitchen deserves a little extra sizzle."}
           </Typography>
           <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem"}}>
             <TextField
               sx={{ 
                 backgroundColor: "white",
+                borderColor: "#a17c5e"
               }}
               variant="filled"
               label="First Name"
@@ -103,38 +163,62 @@ export default function InterestForm() {
               label="Email Address"
               name="emailAddress"
               id="emailAddress"
-              onChange={(e) => setEmailAddress(e.target.value)}
-            />
-            <TextField
-              sx={{ 
-                backgroundColor: "white",
-              }}
-              variant="filled"
-              value={airFryerCost}
-              label="Guess the air fryer's cost"
-              name="airFryerCost"
-              id="airFryerCost"
-              onChange={(e) => setAirFryerCost(formatCurrency(e.target.value))}
-              inputProps={{ inputMode: "numeric" }}
-            />
-            <TextField
-              sx={{ 
-                backgroundColor: "white",
-              }}
-              variant="filled"
-              value={secretPin}
-              label="Super Secret PIN #"
-              name="superSecretPin"
-              id="superSecretPin"
-              onChange={(e) => formatSpidrPin(e.target.value)}
-              inputProps={{ inputMode: "numeric" }}
+              onChange={handleEmailChange}
+              onBlur={handleEmailBlur}
+              error={!!emailError && emailBlurred}
+              helperText={emailBlurred && emailError ? emailError : " "}
             />
             
+            <Typography variant="h6"sx={{
+              fontFamily: "'Lora', serif",
+              color: "#4a2d16", 
+              fontWeight: 400,
+              textAlign: "center", 
+              marginBottom: 2 
+            }}>
+              What matters most to you?
+            </Typography>
+
+            <FormControl>
+              <FormLabel id="user-budget">Typical Appliance Budget</FormLabel>
+              <RadioGroup
+                row
+                aria-labelledby="appliance-budget-radio-button-label"
+                name="appliance-budget"
+                onChange={handleBudgetChange}
+              >
+                {userBudgetOptions.map((option, index) => (
+                  <FormControlLabel key={index} value={option} control={<Radio/>} label={option}/>
+                ))}
+              </RadioGroup>
+            </FormControl>
+
+            <FormControl>
+              <FormLabel id="most-important-feature">Most Important Feature</FormLabel>
+              <RadioGroup
+                row
+                aria-labelledby="most-important-feature-radio-button-label"
+                name="most-important-feature"
+                onChange={handleMostImportantFeatureChange}
+              >
+                {featureOptions.map((option, index) => (
+                  <FormControlLabel key={index} value={option} control={<Radio/>} label={option}/>
+                ))}
+              </RadioGroup>
+            </FormControl>
+
             <div style={{ textAlign: "center" }}>
               <Button type="submit" sx={{ 
-                backgroundColor: "white",
+                backgroundColor: "#9d2235",
                 width: 400
-              }}>Submit</Button>
+              }}>
+                <Typography sx={{
+                  color: "white",
+                  fontFamily: "'Merriweather', serif"
+                }}>
+                  Count Me In!
+                </Typography>
+                </Button>
             </div>
             
           </form>
