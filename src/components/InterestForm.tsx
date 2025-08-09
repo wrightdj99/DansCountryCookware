@@ -15,6 +15,7 @@ import { MuiTelInput } from "mui-tel-input";
 import linenBackground from "../assets/linenBackground.avif";
 import { featureOptions } from "../core/mostImportantFeatureOptions";
 import { userBudgetOptions } from "../core/userBudgetOptions";
+import { preferredRetailerOptions } from "../core/preferredRetailerOptions";
 
 export default function InterestForm() {
   const [firstName, setFirstName] = useState("");
@@ -23,6 +24,7 @@ export default function InterestForm() {
   const [emailAddress, setEmailAddress] = useState("");
   const [userBudget, setUserBudget] = useState("");
   const [mostImporantFeature, setMostImportantFeature] = useState("");
+  const [preferredRetailer, setPreferredRetailer] = useState("");
   const [emailBlurred, setEmailBlurred] = useState(false);
   const [emailError, setEmailError] = useState("");
 
@@ -33,7 +35,8 @@ export default function InterestForm() {
       phone: phone,
       emailAddress: emailAddress,
       userBudget,
-      mostImporantFeature
+      mostImporantFeature,
+      preferredRetailer
     };
 
     const jsonifiedData = JSON.stringify(formData);
@@ -49,6 +52,10 @@ export default function InterestForm() {
 
   const handleMostImportantFeatureChange = (e: SelectChangeEvent) => {
     setMostImportantFeature(e.target.value as string);
+  }
+
+  const handlePreferredRetailerChange = (e: SelectChangeEvent) => {
+    setPreferredRetailer(e.target.value as string);
   }
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -202,6 +209,20 @@ export default function InterestForm() {
                 onChange={handleMostImportantFeatureChange}
               >
                 {featureOptions.map((option, index) => (
+                  <FormControlLabel key={index} value={option} control={<Radio/>} label={option}/>
+                ))}
+              </RadioGroup>
+            </FormControl>
+
+            <FormControl>
+              <FormLabel id="preferred-retailer">Preferred Retailer For Kitchen Appliances</FormLabel>
+              <RadioGroup
+                row
+                aria-labelledby="preferred-retailer-radio-button-label"
+                name="preferred-retailer"
+                onChange={handlePreferredRetailerChange}
+              >
+                {preferredRetailerOptions.map((option, index) => (
                   <FormControlLabel key={index} value={option} control={<Radio/>} label={option}/>
                 ))}
               </RadioGroup>
