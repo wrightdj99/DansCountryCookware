@@ -23,28 +23,43 @@ export default function InterestForm() {
   const [phone, setPhone] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
   const [userBudget, setUserBudget] = useState("");
-  const [mostImporantFeature, setMostImportantFeature] = useState("");
+  const [mostImportantFeature, setMostImportantFeature] = useState("");
   const [preferredRetailer, setPreferredRetailer] = useState("");
   const [emailBlurred, setEmailBlurred] = useState(false);
   const [emailError, setEmailError] = useState("");
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    const formData = {
-      firstName: firstName,
-      lastName: lastName,
-      phone: phone,
-      emailAddress: emailAddress,
-      userBudget,
-      mostImporantFeature,
-      preferredRetailer
-    };
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  e.preventDefault(); // Move this up so form doesn't reload
 
-    const jsonifiedData = JSON.stringify(formData);
+  const formData = {
+    firstName,
+    lastName,
+    phoneNumber: phone, // match Lambda
+    emailAddress,
+    typicalBudget: userBudget, // match Lambda
+    mostImportantFeature, // fix typo
+    preferredRetailer
+  };
 
-    console.log(jsonifiedData);
+  try {
+    const res = await fetch("https://2h2f6wjcg7.execute-api.us-east-1.amazonaws.com/deployment/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData)
+    });
 
-    e.preventDefault();
+    if (res.ok) {
+      alert("Thanks for signing up!");
+    } else {
+      const errMsg = await res.text();
+      alert(`Something went wrong: ${errMsg}`);
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Network error. Please try again later.");
   }
+};
+
 
   const handleBudgetChange = (e: SelectChangeEvent) => {
     setUserBudget(e.target.value as string);
